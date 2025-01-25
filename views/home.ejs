@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+  <title>File Upload</title>
+</head>
+
+<body>
+  <main class="p-4 bg-gray-100 dark:bg-gray-800 h-screen">
+    <!-- Trigger Button -->
+    <button onclick="showPopUp()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+      Upload File
+    </button>
+
+    <!-- Pop-up Modal -->
+    <div class="pop backdrop-blur hidden fixed inset-0 flex justify-center items-center z-50">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-3/4 max-w-md">
+        <h2 class="text-xl font-bold mb-4 text-gray-700 dark:text-gray-200">Upload Your File</h2>
+
+        <!-- Form -->
+        <form action="/upload-file" method="post" enctype="multipart/form-data" class="flex flex-col items-center">
+          <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+              <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+              </svg>
+              <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+            </div>
+            <input id="dropzone-file" type="file" class="hidden" name="file" />
+          </label>
+
+          <!-- Upload Button -->
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-4 rounded-lg">
+            Upload File
+          </button>
+        </form>
+
+        <!-- Close Button -->
+        <button onclick="closePopUp()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 mt-4 rounded-lg">
+          Close
+        </button>
+      </div>
+    </div>
+
+    <% if (fileUrl) { %>
+        <div class="grid grid-cols-3 gap-4 mt-6">
+            <h3 class="text-white">File uploaded successfully!</h3>
+            <div class="p-4 bg-white rounded shadow">
+            <!-- Display Image if the file is an image -->
+            <% if (fileUrl.endsWith('.jpg') || fileUrl.endsWith('.jpeg') || fileUrl.endsWith('.png') || fileUrl.endsWith('.gif')) { %>
+                <img src="<%= fileUrl %>" alt="Uploaded Image" class="max-w-full h-auto mt-4">
+            <% } else if (fileUrl.endsWith('.pdf')) { %>
+                <embed src="<%= fileUrl %>" type="application/pdf" width="100%" height="50px" />
+            <% } else if (fileUrl.endsWith('.mp4')) { %>
+                <video controls class="max-w-full h-auto mt-4">
+                    <source src="<%= fileUrl %>" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            <% } else { %>
+                <p>File uploaded: <a href="<%= fileUrl %>" target="_blank" class="text-blue-500 underline">View File</a></p>
+            <% } %>
+    
+            <!-- Provide download link -->
+            <a href="<%= fileUrl %>" download class="text-blue-500 underline mt-4 block">Download File</a>
+        </div>
+      </div>
+    <% } %>
+    
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
+  <script>
+    // Show the pop-up
+    function showPopUp() {
+      document.querySelector(".pop").classList.remove("hidden");
+    }
+
+    // Hide the pop-up
+    function closePopUp() {
+      document.querySelector(".pop").classList.add("hidden");
+    }
+  </script>
+</body>
+
+</html>
